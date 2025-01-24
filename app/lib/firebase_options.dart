@@ -24,10 +24,10 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIza...',
-    appId: '1:1234...',
-    messagingSenderId: '1234...',
-    projectId: 'your-project-id',
-    storageBucket: 'your-project.appspot.com',
+    apiKey: 'AIzaSyBwvWnX0h7mVUtDQMZdUqc4glbMDMjWWHY', //  google-services.json "api_key"
+    appId: '1:290660603850:android:58a4f85ec693141bfee133', //  google-services.json "mobilesdk_app_id"
+    messagingSenderId: '290660603850', //  google-services.json "project_number"
+    projectId: 'analytics-5593c', //  google-services.json "project_id"
+    storageBucket: 'analytics-5593c.firebasestorage.app', //  google-services.json "storage_bucket"
   );
-} 
+}
