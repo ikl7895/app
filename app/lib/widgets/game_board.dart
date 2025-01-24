@@ -145,7 +145,35 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void moveDown() {
-    // Code remains unchanged (logic and functionality)
+    bool moved = false;
+    
+    // Start from the bottom and process each row upwards
+    for (int j = 0; j < 4; j++) {
+      for (int i = 2; i >= 0; i--) {
+        if (board[i][j] != 0) {
+          int row = i;
+          // Move down until hitting another number or the boundary
+          while (row + 1 < 4 && board[row + 1][j] == 0) {
+            board[row + 1][j] = board[row][j];
+            board[row][j] = 0;
+            row++;
+            moved = true;
+          }
+          // Check if merging is possible
+          if (row + 1 < 4 && board[row + 1][j] == board[row][j]) {
+            board[row + 1][j] *= 2;
+            score += board[row + 1][j];
+            board[row][j] = 0;
+            moved = true;
+          }
+        }
+      }
+    }
+
+    if (moved) {
+      addNewTile();
+      setState(() {});
+    }
   }
 
   void resetGame() {
