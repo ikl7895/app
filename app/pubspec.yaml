@@ -30,13 +30,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.5
-  shared_preferences: ^2.2.2
-  intl: ^0.18.1
-  dialog_flowtter: ^0.3.3
-  sensors_plus: ^3.0.0
-  cupertino_icons: ^1.0.2
-  translator: ^0.1.7
+  provider: ^6.0.5            # Provider API - 用於狀態管理
+  shared_preferences: ^2.2.2  # SharedPreferences API - 用於數據持久化
+  intl: ^0.18.1              # 國際化工具
+  dialog_flowtter: ^0.3.3    # Dialogflow API - 用於聊天機器人
+  sensors_plus: ^3.0.0       # Sensors API - 用於加速度感應器
+  cupertino_icons: ^1.0.2    # iOS 風格圖標
+  translator: ^0.1.7         # 翻譯 API（目前未使用）
 
 dev_dependencies:
   flutter_test:
