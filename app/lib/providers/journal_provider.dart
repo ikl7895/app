@@ -2,11 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/journal_entry.dart';
+import '../services/firebase_service.dart';
 
 class JournalProvider with ChangeNotifier {
   final List<JournalEntry> _entries = [];
   static const String _storageKey = 'journal_entries'; // Key for saving entries in SharedPreferences.
   SharedPreferences? _prefs;
+  final FirebaseService _firebaseService = FirebaseService();
+  String? _userId; // Current user ID
 
   // Getter for journal entries, returning an unmodifiable list to ensure immutability.
   List<JournalEntry> get entries => List.unmodifiable(_entries);
@@ -80,20 +83,73 @@ class JournalProvider with ChangeNotifier {
     }
   }
 
-  // Add a new journal entry.
-  Future<void> addEntry(JournalEntry entry) async {
-    print('Adding entry - type: ${entry.type}, title: ${entry.title}');
-    _entries.add(entry);
-    _entries.sort((a, b) => b.date.compareTo(a.date));
-    await _saveEntries();
-    notifyListeners();
+  // Set the user ID and start syncing
+  Future<void> setUserId(String userId) async {
+    _userId = userId;
+    await _syncWithFirebase();
+    // Listen to Firebase updates
+    _firebaseService.getJournalEntries(userId).listen((entries) {
+      _handleFirebaseUpdate(entries);
+    });
   }
 
-  // Delete a journal entry by its ID.
+  // Handle updates from Firebase
+  void _handleFirebaseUpdate(List<JournalEntry> firebaseEntries) {
+    // Merge local and remote data
+    final Map<String, JournalEntry> entriesMap = {};
+
+    // Add local data first
+    for (var entry in _entries) {
+      entriesMap[entry.id] = entry;
+    }
+
+    // Add remote data (remote data overrides conflicts)
+    for (var entry in firebaseEntries) {
+      entriesMap[entry.id] = entry;
+    }
+
+    _entries.clear();
+    _entries.addAll(entriesMap.values);
+    _entries.sort((a, b) => b.date.compareTo(a.date));
+
+    notifyListeners();
+    _saveEntries(); // Save to local storage
+  }
+
+  // Sync with Firebase
+  Future<void> _syncWithFirebase() async {
+    if (_userId == null) return;
+
+    try {
+      await _firebaseService.syncLocalToFirebase(_userId!, _entries);
+    } catch (e) {
+      print('Firebase sync error: $e');
+    }
+  }
+
+  // Override the add method
+  @override
+  Future<void> addEntry(JournalEntry entry) async {
+    _entries.add(entry);
+    _entries.sort((a, b) => b.date.compareTo(a.date));
+    notifyListeners();
+
+    await _saveEntries();
+    if (_userId != null) {
+      await _firebaseService.saveJournalEntry(_userId!, entry);
+    }
+  }
+
+  // Override the delete method
+  @override
   Future<void> deleteEntry(String id) async {
     _entries.removeWhere((entry) => entry.id == id);
-    await _saveEntries();
     notifyListeners();
+
+    await _saveEntries();
+    if (_userId != null) {
+      await _firebaseService.deleteJournalEntry(_userId!, id);
+    }
   }
 
   // Update an existing journal entry.
