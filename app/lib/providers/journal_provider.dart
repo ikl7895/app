@@ -8,7 +8,7 @@ class JournalProvider with ChangeNotifier {
   final List<JournalEntry> _entries = [];
   static const String _storageKey = 'journal_entries'; // Key for saving entries in SharedPreferences.
   SharedPreferences? _prefs;
-  final FirebaseService _firebaseService = FirebaseService();
+  late final FirebaseService _firebaseService;
   String? _userId; // Current user ID
 
   // Getter for journal entries, returning an unmodifiable list to ensure immutability.
@@ -28,9 +28,10 @@ class JournalProvider with ChangeNotifier {
     return entries;
   }
 
-  // Initialize the provider by loading stored entries from SharedPreferences.
+  // Initialize the provider
   Future<void> init() async {
     try {
+      _firebaseService = FirebaseService();
       _prefs = await SharedPreferences.getInstance();
       await _loadEntries();
     } catch (e) {
