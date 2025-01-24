@@ -133,15 +133,119 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   void moveLeft() {
-    // Code remains unchanged (logic and functionality)
+    bool moved = false;
+    for (int i = 0; i < 4; i++) {
+      List<int> row = [];
+      for (int j = 0; j < 4; j++) {
+        if (board[i][j] != 0) {
+          row.add(board[i][j]);
+        }
+      }
+      
+      // Merge tiles
+      for (int j = 1; j < row.length; j++) {
+        if (row[j] == row[j - 1]) {
+          row[j - 1] *= 2;
+          score += row[j - 1];
+          row.removeAt(j);
+          moved = true;
+        }
+      }
+      
+      // Fill empty spaces
+      while (row.length < 4) {
+        row.add(0);
+      }
+      
+      // Check if the board changed
+      if (row.toString() != board[i].toString()) {
+        moved = true;
+      }
+      board[i] = row;
+    }
+    
+    if (moved) {
+      addNewTile();
+      setState(() {});
+    }
   }
 
   void moveRight() {
-    // Code remains unchanged (logic and functionality)
+    bool moved = false;
+    for (int i = 0; i < 4; i++) {
+      List<int> row = [];
+      for (int j = 3; j >= 0; j--) {
+        if (board[i][j] != 0) {
+          row.add(board[i][j]);
+        }
+      }
+      
+      // Merge tiles
+      for (int j = 1; j < row.length; j++) {
+        if (row[j] == row[j - 1]) {
+          row[j - 1] *= 2;
+          score += row[j - 1];
+          row.removeAt(j);
+          moved = true;
+        }
+      }
+      
+      // Fill empty spaces
+      while (row.length < 4) {
+        row.insert(0, 0);
+      }
+      
+      // Check if the board changed
+      if (row.toString() != board[i].toString()) {
+        moved = true;
+      }
+      board[i] = row;
+    }
+    
+    if (moved) {
+      addNewTile();
+      setState(() {});
+    }
   }
 
   void moveUp() {
-    // Code remains unchanged (logic and functionality)
+    bool moved = false;
+    for (int j = 0; j < 4; j++) {
+      List<int> column = [];
+      for (int i = 0; i < 4; i++) {
+        if (board[i][j] != 0) {
+          column.add(board[i][j]);
+        }
+      }
+      
+      // Merge tiles
+      for (int i = 1; i < column.length; i++) {
+        if (column[i] == column[i - 1]) {
+          column[i - 1] *= 2;
+          score += column[i - 1];
+          column.removeAt(i);
+          moved = true;
+        }
+      }
+      
+      // Fill empty spaces
+      while (column.length < 4) {
+        column.add(0);
+      }
+      
+      // Update board
+      for (int i = 0; i < 4; i++) {
+        if (board[i][j] != column[i]) {
+          moved = true;
+        }
+        board[i][j] = column[i];
+      }
+    }
+    
+    if (moved) {
+      addNewTile();
+      setState(() {});
+    }
   }
 
   void moveDown() {
