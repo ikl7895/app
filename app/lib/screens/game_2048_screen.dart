@@ -10,7 +10,7 @@ class Game2048Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('2048'),
+        title: const Text('game'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
