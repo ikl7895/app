@@ -220,7 +220,7 @@ class _MeditationScreenState extends State<MeditationScreen> {
                       ),
                       child: const Text(
                         'Reset',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 22),
                       ),
                     ),
                   ],
