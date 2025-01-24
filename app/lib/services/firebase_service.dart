@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/journal_entry.dart';
 
 class FirebaseService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final FirebaseFirestore _firestore;
+
+  FirebaseService() {
+    _firestore = FirebaseFirestore.instance;
+  }
 
   // Retrieve all journal entries for the user
   Stream<List<JournalEntry>> getJournalEntries(String userId) {
