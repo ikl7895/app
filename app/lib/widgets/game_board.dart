@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:sensors_plus/sensors_plus.dart';
+import 'dart:async';
 import 'game_tile.dart';
 
 class GameBoard extends StatefulWidget {
@@ -13,12 +15,63 @@ class _GameBoardState extends State<GameBoard> {
   List<List<int>> board = List.generate(4, (_) => List.filled(4, 0));
   int score = 0;
   bool gameOver = false;
+  StreamSubscription? _accelerometerSubscription;
+  DateTime? _lastShakeTime;
 
   @override
   void initState() {
     super.initState();
     addNewTile();
     addNewTile();
+    _initAccelerometer();
+  }
+
+  void _initAccelerometer() {
+    _accelerometerSubscription = accelerometerEvents.listen((event) {
+      // 計算加速度的總和
+      double acceleration = event.x * event.x + 
+                          event.y * event.y + 
+                          event.z * event.z;
+      
+      // 如果加速度超過某個閾值，且距離上次搖動超過1秒
+      if (acceleration > 250) {
+        final now = DateTime.now();
+        if (_lastShakeTime == null || 
+            now.difference(_lastShakeTime!) > const Duration(seconds: 1)) {
+          _lastShakeTime = now;
+          _showResetConfirmation();
+        }
+      }
+    });
+  }
+
+  void _showResetConfirmation() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('重置遊戲'),
+        content: const Text('確定要重新開始遊戲嗎？'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              resetGame();
+            },
+            child: const Text('確定'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _accelerometerSubscription?.cancel();
+    super.dispose();
   }
 
   void addNewTile() {
@@ -233,19 +286,31 @@ class _GameBoardState extends State<GameBoard> {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              Text(
-                '分數: $score',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '分數: $score',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _showResetConfirmation(),
+                    child: const Text('重新開始'),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: resetGame,
-                child: const Text('重新開始'),
+              const SizedBox(height: 8),
+              const Text(
+                '提示：搖動手機可以重置遊戲',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
               ),
             ],
           ),
