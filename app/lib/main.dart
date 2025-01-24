@@ -7,12 +7,14 @@ import 'screens/home_screen.dart';
 import 'screens/mood_tracker_screen.dart';
 import 'screens/meditation_screen.dart';
 import 'screens/diary_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // Add global navigation key
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
