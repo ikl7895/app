@@ -10,7 +10,11 @@ class Game2048Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+<<<<<<< Updated upstream
         title: const Text('game'),
+=======
+        title: const Text('Game'),
+>>>>>>> Stashed changes
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
