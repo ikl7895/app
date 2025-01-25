@@ -7,7 +7,7 @@ import '../providers/journal_provider.dart';
 import '../screens/statistics_screen.dart';
 import '../models/journal_entry.dart';
 import '../screens/chat_screen.dart';
-import '../screens/game_2048_screen.dart';
+import '../screens/game_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
