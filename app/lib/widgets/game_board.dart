@@ -26,13 +26,11 @@ class _GameBoardState extends State<GameBoard> {
 
   void _initAccelerometer() {
     _accelerometerSubscription = accelerometerEvents.listen((event) {
-      // Lower the threshold to make it easier to test in the emulator
       double acceleration = event.x * event.x +
           event.y * event.y +
           event.z * event.z;
 
-      // Lower the threshold from 250 to 100
-      if (acceleration > 100) { // Adjust this value
+      if (acceleration > 100) {
         final now = DateTime.now();
         if (_lastShakeTime == null ||
             now.difference(_lastShakeTime!) > const Duration(seconds: 1)) {
@@ -85,40 +83,19 @@ class _GameBoardState extends State<GameBoard> {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Score: ${gameLogic.score}',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.vibration),
-                        onPressed: _showResetConfirmation,
-                        tooltip: 'Test Shake',
-                      ),
-                      ElevatedButton(
-                        onPressed: () => _showResetConfirmation(),
-                        child: const Text('Restart'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Hint: Shake your phone to reset the game',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
+              Text(
+                'Score: ${gameLogic.score}',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
+              ElevatedButton(
+                onPressed: () => _showResetConfirmation(),
+                child: const Text('Restart'),
               ),
             ],
           ),
