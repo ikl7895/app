@@ -166,17 +166,24 @@ class _GameBoardState extends State<GameBoard> {
 
     final dx = details.velocity.pixelsPerSecond.dx;
     final dy = details.velocity.pixelsPerSecond.dy;
+    
+    print('dx: $dx, dy: $dy');
 
     if (dx.abs() > dy.abs()) {
       if (dx > 0) {
+        print('Moving right');
         gameLogic.moveRight();
       } else {
+        print('Moving left');
         gameLogic.moveLeft();
       }
     } else {
       if (dy > 0) {
+        print('Moving down');
         gameLogic.moveDown();
+        setState(() {});
       } else {
+        print('Moving up');
         gameLogic.moveUp();
       }
     }
