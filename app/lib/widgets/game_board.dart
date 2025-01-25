@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:async';
 import 'game_tile.dart';
-import 'game_logic.dart';
+import '../models/game_logic.dart';
 
 class GameBoard extends StatefulWidget {
   const GameBoard({Key? key}) : super(key: key);
