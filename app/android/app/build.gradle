@@ -61,8 +61,13 @@ android {
         }
     }
 
-    lint {
+    lintOptions {
         disable 'InvalidPackage'
+        disable 'Deprecation'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation"
     }
 }
 
