@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class GameLogic {
   List<List<int>> board = List.generate(4, (_) => List.filled(4, 0));
   int score = 0;
@@ -43,4 +45,50 @@ class GameLogic {
     addNewTile();
     addNewTile();
   }
-} 
+
+  void moveLeft() {
+    bool moved = false;
+    for (int i = 0; i < 4; i++) {
+      List<int> row = [];
+      for (int j = 0; j < 4; j++) {
+        if (board[i][j] != 0) {
+          row.add(board[i][j]);
+        }
+      }
+
+      for (int j = 1; j < row.length; j++) {
+        if (row[j] == row[j - 1]) {
+          row[j - 1] *= 2;
+          score += row[j - 1];
+          row.removeAt(j);
+          moved = true;
+        }
+      }
+
+      while (row.length < 4) {
+        row.add(0);
+      }
+
+      if (row.toString() != board[i].toString()) {
+        moved = true;
+      }
+      board[i] = row;
+    }
+
+    if (moved) {
+      addNewTile();
+    }
+  }
+
+  void moveRight() {
+    // Implement the logic for moving tiles to the right
+  }
+
+  void moveUp() {
+    // Implement the logic for moving tiles upward
+  }
+
+  void moveDown() {
+    // Implement the logic for moving tiles downward
+  }
+}
