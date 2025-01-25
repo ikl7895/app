@@ -166,11 +166,11 @@ class GameLogic {
       }
       
       // Merge tiles
-      for (int i = 1; i < column.length; i++) {
-        if (column[i] == column[i - 1]) {
-          column[i - 1] *= 2;
-          score += column[i - 1];
-          column.removeAt(i);
+      for (int i = 0; i < column.length - 1; i++) {
+        if (column[i] == column[i + 1]) {
+          column[i] *= 2;
+          score += column[i];
+          column.removeAt(i + 1);
           moved = true;
         }
       }
@@ -182,10 +182,10 @@ class GameLogic {
       
       // Update board
       for (int i = 0; i < 4; i++) {
-        if (board[3-i][j] != column[i]) {
+        if (board[3 - i][j] != column[i]) {
           moved = true;
         }
-        board[3-i][j] = column[i];
+        board[3 - i][j] = column[i];
       }
     }
     
