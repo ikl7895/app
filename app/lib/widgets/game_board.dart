@@ -175,177 +175,25 @@ class _GameBoardState extends State<GameBoard> {
   void move(DragEndDetails details) {
     if (gameLogic.gameOver) return;
 
-    // Calculate the main direction of movement
     final dx = details.velocity.pixelsPerSecond.dx;
     final dy = details.velocity.pixelsPerSecond.dy;
 
-    // Use absolute values to determine whether it's horizontal or vertical
     if (dx.abs() > dy.abs()) {
-      // Horizontal movement
       if (dx > 0) {
-        moveRight();
+        gameLogic.moveRight();
       } else {
-        moveLeft();
+        gameLogic.moveLeft();
       }
     } else {
-      // Vertical movement
       if (dy > 0) {
-        moveDown(); // Swipe down
+        gameLogic.moveDown();
       } else {
-        moveUp(); // Swipe up
+        gameLogic.moveUp();
       }
     }
 
-    // Check if the game is over
     setState(() {
       gameLogic.gameOver = !gameLogic.canMove();
     });
-  }
-
-  void moveLeft() {
-    bool moved = false;
-    for (int i = 0; i < 4; i++) {
-      List<int> row = [];
-      for (int j = 0; j < 4; j++) {
-        if (gameLogic.board[i][j] != 0) {
-          row.add(gameLogic.board[i][j]);
-        }
-      }
-
-      // Merge tiles
-      for (int j = 1; j < row.length; j++) {
-        if (row[j] == row[j - 1]) {
-          row[j - 1] *= 2;
-          row[j - 1] += row[j];
-          row.removeAt(j);
-          moved = true;
-        }
-      }
-
-      // Fill empty spaces
-      while (row.length < 4) {
-        row.add(0);
-      }
-
-      // Check if the board changed
-      if (row.toString() != gameLogic.board[i].toString()) {
-        moved = true;
-      }
-      gameLogic.board[i] = row;
-    }
-
-    if (moved) {
-      gameLogic.addNewTile();
-      setState(() {});
-    }
-  }
-
-  void moveRight() {
-    bool moved = false;
-    for (int i = 0; i < 4; i++) {
-      List<int> row = [];
-      for (int j = 3; j >= 0; j--) {
-        if (gameLogic.board[i][j] != 0) {
-          row.add(gameLogic.board[i][j]);
-        }
-      }
-
-      // Merge tiles
-      for (int j = 1; j < row.length; j++) {
-        if (row[j] == row[j - 1]) {
-          row[j - 1] *= 2;
-          row[j - 1] += row[j];
-          row.removeAt(j);
-          moved = true;
-        }
-      }
-
-      // Fill empty spaces
-      while (row.length < 4) {
-        row.insert(0, 0);
-      }
-
-      // Check if the board changed
-      if (row.toString() != gameLogic.board[i].toString()) {
-        moved = true;
-      }
-      gameLogic.board[i] = row;
-    }
-
-    if (moved) {
-      gameLogic.addNewTile();
-      setState(() {});
-    }
-  }
-
-  void moveUp() {
-    bool moved = false;
-    for (int j = 0; j < 4; j++) {
-      List<int> column = [];
-      for (int i = 0; i < 4; i++) {
-        if (gameLogic.board[i][j] != 0) {
-          column.add(gameLogic.board[i][j]);
-        }
-      }
-
-      // Merge tiles
-      for (int i = 1; i < column.length; i++) {
-        if (column[i] == column[i - 1]) {
-          column[i - 1] *= 2;
-          column[i - 1] += column[i];
-          column.removeAt(i);
-          moved = true;
-        }
-      }
-
-      // Fill empty spaces
-      while (column.length < 4) {
-        column.add(0);
-      }
-
-      // Update board
-      for (int i = 0; i < 4; i++) {
-        if (gameLogic.board[i][j] != column[i]) {
-          moved = true;
-        }
-        gameLogic.board[i][j] = column[i];
-      }
-    }
-
-    if (moved) {
-      gameLogic.addNewTile();
-      setState(() {});
-    }
-  }
-
-  void moveDown() {
-    bool moved = false;
-
-    // Start from the bottom and process each row upwards
-    for (int j = 0; j < 4; j++) {
-      for (int i = 2; i >= 0; i--) {
-        if (gameLogic.board[i][j] != 0) {
-          int row = i;
-          // Move down until hitting another number or the boundary
-          while (row + 1 < 4 && gameLogic.board[row + 1][j] == 0) {
-            gameLogic.board[row + 1][j] = gameLogic.board[row][j];
-            gameLogic.board[row][j] = 0;
-            row++;
-            moved = true;
-          }
-          // Check if merging is possible
-          if (row + 1 < 4 && gameLogic.board[row + 1][j] == gameLogic.board[row][j]) {
-            gameLogic.board[row + 1][j] *= 2;
-            gameLogic.board[row][j] = 0;
-            moved = true;
-          }
-        }
-      }
-    }
-
-    if (moved) {
-      gameLogic.addNewTile();
-      setState(() {});
-    }
   }
 }
