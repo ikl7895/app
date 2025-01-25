@@ -4,7 +4,7 @@ import '../providers/navigation_provider.dart';
 import '../models/journal_entry.dart';
 import '../providers/journal_provider.dart';
 import '../screens/chat_screen.dart';
-import 'game_2048_screen.dart';
+import 'game_screen.dart';
 
 class MoodTrackerScreen extends StatefulWidget {
   const MoodTrackerScreen({Key? key}) : super(key: key);
