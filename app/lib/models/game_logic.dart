@@ -56,6 +56,7 @@ class GameLogic {
         }
       }
 
+      // Merge tiles
       for (int j = 1; j < row.length; j++) {
         if (row[j] == row[j - 1]) {
           row[j - 1] *= 2;
@@ -65,6 +66,7 @@ class GameLogic {
         }
       }
 
+      // Fill empty spaces
       while (row.length < 4) {
         row.add(0);
       }
@@ -89,7 +91,7 @@ class GameLogic {
           row.add(board[i][j]);
         }
       }
-      
+
       // Merge tiles
       for (int j = 1; j < row.length; j++) {
         if (row[j] == row[j - 1]) {
@@ -99,18 +101,18 @@ class GameLogic {
           moved = true;
         }
       }
-      
+
       // Fill empty spaces
       while (row.length < 4) {
         row.insert(0, 0);
       }
-      
+
       if (row.toString() != board[i].toString()) {
         moved = true;
       }
       board[i] = row;
     }
-    
+
     if (moved) {
       addNewTile();
     }
@@ -125,7 +127,7 @@ class GameLogic {
           column.add(board[i][j]);
         }
       }
-      
+
       // Merge tiles
       for (int i = 1; i < column.length; i++) {
         if (column[i] == column[i - 1]) {
@@ -135,13 +137,13 @@ class GameLogic {
           moved = true;
         }
       }
-      
+
       // Fill empty spaces
       while (column.length < 4) {
         column.add(0);
       }
-      
-      // Update board
+
+      // Update the board from top to bottom
       for (int i = 0; i < 4; i++) {
         if (board[i][j] != column[i]) {
           moved = true;
@@ -149,7 +151,7 @@ class GameLogic {
         board[i][j] = column[i];
       }
     }
-    
+
     if (moved) {
       addNewTile();
     }
@@ -159,36 +161,38 @@ class GameLogic {
     bool moved = false;
     for (int j = 0; j < 4; j++) {
       List<int> column = [];
-      for (int i = 3; i >= 0; i--) {
+      for (int i = 0; i < 4; i++) {
         if (board[i][j] != 0) {
           column.add(board[i][j]);
         }
       }
-      
-      // Merge tiles
-      for (int i = 0; i < column.length - 1; i++) {
-        if (column[i] == column[i + 1]) {
-          column[i] *= 2;
-          score += column[i];
-          column.removeAt(i + 1);
+
+      // Merge identical numbers
+      int index = column.length - 1;
+      while (index > 0) {
+        if (column[index] == column[index - 1]) {
+          column[index] *= 2;
+          score += column[index];
+          column.removeAt(index - 1);
           moved = true;
         }
+        index--;
       }
-      
-      // Fill empty spaces
+
+      // Fill zeros at the top
       while (column.length < 4) {
         column.insert(0, 0);
       }
-      
-      // Update board
+
+      // Update the board from bottom to top
       for (int i = 0; i < 4; i++) {
-        if (board[3 - i][j] != column[i]) {
+        if (board[i][j] != column[i]) {
           moved = true;
         }
-        board[3 - i][j] = column[i];
+        board[i][j] = column[i];
       }
     }
-    
+
     if (moved) {
       addNewTile();
     }
