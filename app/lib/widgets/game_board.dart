@@ -83,19 +83,31 @@ class _GameBoardState extends State<GameBoard> {
       children: [
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              Text(
-                'Score: ${gameLogic.score}',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Score: ${gameLogic.score}',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _showResetConfirmation(),
+                    child: const Text('Restart'),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () => _showResetConfirmation(),
-                child: const Text('Restart'),
+              const SizedBox(height: 8),
+              const Text(
+                'Hint: Shake your phone to reset the game',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
               ),
             ],
           ),
