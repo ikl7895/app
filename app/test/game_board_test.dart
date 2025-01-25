@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:app/widgets/game_board.dart';
 import 'package:app/widgets/game_tile.dart';
+import 'package:app/models/game_logic.dart';
 
 void main() {
   group('GameBoard Widget Tests', () {
@@ -71,20 +72,48 @@ void main() {
   });
 
   group('Game Logic Tests', () {
+    late GameLogic gameLogic;
+
+    setUp(() {
+      gameLogic = GameLogic();
+    });
+
     test('Board should initialize correctly', () {
-      final gameBoard = _GameBoardState();
-      expect(gameBoard.board.length, 4);
-      expect(gameBoard.board[0].length, 4);
+      expect(gameLogic.board.length, 4);
+      expect(gameLogic.board[0].length, 4);
     });
 
     test('Score should start at 0', () {
-      final gameBoard = _GameBoardState();
-      expect(gameBoard.score, 0);
+      expect(gameLogic.score, 0);
     });
 
     test('Game should not be over at start', () {
-      final gameBoard = _GameBoardState();
-      expect(gameBoard.gameOver, false);
+      expect(gameLogic.gameOver, false);
+    });
+
+    test('Board should have two non-zero tiles at start', () {
+      int nonZeroTiles = 0;
+      for (var row in gameLogic.board) {
+        for (var tile in row) {
+          if (tile != 0) nonZeroTiles++;
+        }
+      }
+      expect(nonZeroTiles, 2);
+    });
+
+    test('Reset should clear board and add two new tiles', () {
+      gameLogic.score = 100;
+      gameLogic.reset();
+      
+      expect(gameLogic.score, 0);
+      
+      int nonZeroTiles = 0;
+      for (var row in gameLogic.board) {
+        for (var tile in row) {
+          if (tile != 0) nonZeroTiles++;
+        }
+      }
+      expect(nonZeroTiles, 2);
     });
   });
 }
